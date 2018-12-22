@@ -27,7 +27,7 @@ typedef struct {
  *
  * Exits program if an error occurs.
  */
-void vgpio_init(VirtualGPIO *vpgio);
+VirtualGPIO *vgpio_init();
 
 /**
  * Closes file descriptors and frees a VirtualGPIO struct.
