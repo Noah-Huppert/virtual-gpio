@@ -1,4 +1,4 @@
-SRC=src/main.c src/vpgio.c
+SRC=src/main.c src/vgpio.c
 
 OUT_DIR=build
 OUT=${OUT_DIR}/virtual-gpio
