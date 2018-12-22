@@ -1,8 +1,6 @@
-SRC=src/main.c src/vgpio.c
-
 OUT_DIR=build
 OUT=${OUT_DIR}/virtual-gpio
 
-virtual-gpio: ${SRC}
+virtual-gpio: $(shell find src -type f)
 	mkdir -p ${OUT_DIR}
-	gcc -o ${OUT} ${SRC}
+	gcc -Wall -g -o ${OUT} $^
