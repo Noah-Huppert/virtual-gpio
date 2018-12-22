@@ -1,2 +1,5 @@
 # Build output
 build/
+
+# GPIO control file directory used in development
+vgpio/
