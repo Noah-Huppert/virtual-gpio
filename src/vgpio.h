@@ -26,8 +26,10 @@ typedef struct {
  * files / directories.
  *
  * Exits program if an error occurs.
+ *
+ * @param control_f_dir Control file directory
  */
-VirtualGPIO *vgpio_init();
+VirtualGPIO *vgpio_init(const char *control_f_dir);
 
 /**
  * Closes file descriptors and frees a VirtualGPIO struct.

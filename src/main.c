@@ -36,13 +36,5 @@ void main(int argc, char **argv) {
 
 	const char* control_f_dir = argv[1];
 
-	// Create control file directory if it doesn't exist
-	if (!stat(control_f_dir, NULL)) { // If failed to check
-		print_errno("error checking if control file directory exists");
-	} else if (ENOENT == errno) { // Doesn't exist
-		// Create
-		if (!mkdir(control_f_dir, 0777)) {
-			print_errno("error creating control file directory");
-		}
-	}
+	
 }
