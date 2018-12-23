@@ -9,7 +9,6 @@
 #include "./vgpio.h"
 #include "./err.h"
 
-
 const char *mkfifo_stat_err = "error checking if file exists: ";
 const char *mkfifo_create_err = "error creating FIFO file: ";
 const char *mkfifo_open_err = "error opening FIFO file: ";
@@ -31,20 +30,14 @@ int open_or_mk_fifo(char *f_path, mode_t mode) {
 		if (ENOENT == errno) { // Doesn't exist
 			// Create
 			if (mkfifo(f_path, 0666) < 0) {
-				int err_len = strlen(mkfifo_create_err);
-				err_len += strlen(f_path);
-
-				char err[err_len];
-				sprintf(err, "%s%s", mkfifo_create_err, f_path);
+				char err[1000];
+				snprintf(err, sizeof(err), "%s%s", mkfifo_create_err, f_path);
 
 				print_errno(err);
 			}
 		} else { // Other error
-			int err_len = strlen(mkfifo_stat_err);
-			err_len += strlen(f_path);
-
-			char err[err_len];
-			sprintf(err, "%s%s", mkfifo_stat_err, f_path);
+			char err[1000];
+			snprintf(err, sizeof(err), "%s%s", mkfifo_stat_err, f_path);
 
 			print_errno(err);
 		}
@@ -54,11 +47,8 @@ int open_or_mk_fifo(char *f_path, mode_t mode) {
 	int fd = open(f_path, mode | O_NONBLOCK);
 
 	if (fd < 0) { // Error
-		int err_len = strlen(mkfifo_open_err);
-		err_len += strlen(f_path);
-
-		char err[err_len];
-		sprintf(err, "%s%s", mkfifo_open_err, f_path);
+		char err[1000];
+		snprintf(err, sizeof(err), "%s%s", mkfifo_open_err, f_path);
 
 		print_errno(err);
 	}
@@ -66,9 +56,13 @@ int open_or_mk_fifo(char *f_path, mode_t mode) {
 	return fd;
 }
 
-VirtualGPIO *vgpio_init(const char *control_f_dir) {
+VirtualGPIO *vgpio_init(const char *control_f_dir, int max_port_num) {
+	// Allocate
 	VirtualGPIO *vgpio = (VirtualGPIO*)malloc(sizeof(VirtualGPIO));
+
 	vgpio->control_f_dir = control_f_dir;
+
+	vgpio->ptable = ptable_init(max_port_num);
 
 	// Create control file directory if it doesn't exist
 	struct stat stat_buff;
@@ -115,5 +109,12 @@ void vgpio_free(VirtualGPIO *vgpio) {
 		print_errno("failed to close unexport control file");
 	}
 
+	// Free port table
+	ptable_free(vgpio->ptable);
+
+	// Free rest of struct
 	free(vgpio);
+}
+
+void vgpio_run(VirtualGPIO *vgpio) {
 }
