@@ -1,4 +1,4 @@
-.PHONY: run build
+.PHONY: run build clean
 
 OUT_DIR=build
 OUT=${OUT_DIR}/virtual-gpio
@@ -14,5 +14,10 @@ build: ${OUT}
 
 # build virtual gpio binary
 ${OUT}: $(shell find src -type f)
+	./scripts/check-misspelling.sh
 	mkdir -p ${OUT_DIR}
 	gcc -Wall -g -o ${OUT} $^
+
+# clean build ouput
+clean:
+	rm -rf ${OUT_DIR}

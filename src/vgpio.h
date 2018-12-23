@@ -33,7 +33,17 @@ VirtualGPIO *vgpio_init(const char *control_f_dir);
 
 /**
  * Closes file descriptors and frees a VirtualGPIO struct.
+ * @param vgpio Virtual GPIO
  */
 void vgpio_free(VirtualGPIO *vpgio);
+
+/**
+ * Runs the main virtual GPIO logic loop which emulates a GPIO system.
+ *
+ * Exits program if an error occurs.
+ *
+ * @param vgpio Virtual GPIO
+ */
+void vgpio_run(VirtualGPIO *vgpio);
 
 #endif
