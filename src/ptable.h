@@ -13,6 +13,11 @@ typedef struct {
 	int max_port_num;
 
 	/**
+	 * Directory in which GPIO port control files are located.
+	 */
+	char *control_f_dir;
+
+	/**
 	 * Holds exported GPIO ports.
 	 * Indices are port numbers.
 	 * If a value is NULL the port is not exported.
@@ -24,9 +29,10 @@ typedef struct {
 /**
  * Initializes a GPIO port table
  * @param max_port_num Number of ports table can hold
+ * @param control_f_dir Directory in which GPIO port control files are located
  * @returns Allocated GPIOPortTable
  */
-GPIOPortTable *ptable_init(int max_port_num);
+GPIOPortTable *ptable_init(int max_port_num, char *control_f_dir);
 
 /**
  * Frees a port table

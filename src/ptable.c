@@ -2,11 +2,12 @@
 
 #include <stdlib.h>
 
-GPIOPortTable *ptable_init(int max_port_num) {
+GPIOPortTable *ptable_init(int max_port_num, char *control_f_dir) {
 	// Allocate
 	GPIOPortTable *ptable = (GPIOPortTable*)malloc(sizeof(GPIOPortTable));
 
 	ptable->max_port_num = max_port_num;
+	ptable->control_f_dir = control_f_dir;
 
 	// Setup table
 	ptable->ports = (GPIOPort**)malloc(sizeof(GPIOPort)*ptable->max_port_num);

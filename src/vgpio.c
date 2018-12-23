@@ -62,7 +62,7 @@ VirtualGPIO *vgpio_init(const char *control_f_dir, int max_port_num) {
 
 	vgpio->control_f_dir = control_f_dir;
 
-	vgpio->ptable = ptable_init(max_port_num);
+	vgpio->ptable = ptable_init(max_port_num, vgpio->control_f_dir);
 
 	// Create control file directory if it doesn't exist
 	struct stat stat_buff;
