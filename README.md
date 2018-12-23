@@ -14,7 +14,7 @@ capability.
 Run:
 
 ```
-make virtual-gpio
+make build
 ```
 
 # Run
