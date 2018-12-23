@@ -34,6 +34,6 @@ VirtualGPIO *vgpio_init(const char *control_f_dir);
 /**
  * Closes file descriptors and frees a VirtualGPIO struct.
  */
-void vpgio_free(VirtualGPIO *vpgio);
+void vgpio_free(VirtualGPIO *vpgio);
 
 #endif

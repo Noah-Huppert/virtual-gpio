@@ -1,19 +1,16 @@
-#include <stdio.h>
 #include <stdlib.h>
+#include <stdio.h>
 #include <string.h>
-#include <sys/stat.h>
-#include <errno.h>
 
-/**
- * Print an error message and errno to stderr, and exit. 
- * @param err_msg Message with context of error
- */
-void print_errno(const char *err_msg) {
-	fprintf(stderr, "%s: %s\n", err_msg, strerror(errno));
-	exit(1);
+#include "./vgpio.h"
+
+VirtualGPIO *vgpio;
+
+void cleanup() {
+	vgpio_free(vgpio);
 }
 
-void main(int argc, char **argv) {
+int main(int argc, char **argv) {
 	// Check for command line arguments
 	if (argc < 2 || strcmp(argv[1], "-h") == 0 ||
 			strcmp(argv[1], "--help") == 0) {
@@ -32,9 +29,14 @@ void main(int argc, char **argv) {
 		       "\n"
 		       "    CONTROL_FILE_DIR    Directory to place virtual GPIO\n"
 		"                        control files\n");
+		exit(0);
 	}
 
 	const char* control_f_dir = argv[1];
 
-	
+	vgpio = vgpio_init(control_f_dir);
+
+	atexit(cleanup);
+
+	return 0;
 }
