@@ -3,58 +3,11 @@
 #include <sys/stat.h>
 #include <errno.h>
 #include <string.h>
-#include <fcntl.h>
 #include <unistd.h>
 
 #include "./vgpio.h"
 #include "./err.h"
-
-const char *mkfifo_stat_err = "error checking if file exists: ";
-const char *mkfifo_create_err = "error creating FIFO file: ";
-const char *mkfifo_open_err = "error opening FIFO file: ";
-
-/**
- * Opens or creates a fifo file and returns the file descriptor.
- *
- * Exits on error.
- *
- * @param f_path File path
- * @param mode File open mode
- * @returns File descriptor
- */
-int open_or_mk_fifo(char *f_path, mode_t mode) {
-	struct stat stat_buff;
-
-	// Check if file exists
-	if (stat(f_path, &stat_buff) < 0) { // If error while checking
-		if (ENOENT == errno) { // Doesn't exist
-			// Create
-			if (mkfifo(f_path, 0666) < 0) {
-				char err[1000];
-				snprintf(err, sizeof(err), "%s%s", mkfifo_create_err, f_path);
-
-				print_errno(err);
-			}
-		} else { // Other error
-			char err[1000];
-			snprintf(err, sizeof(err), "%s%s", mkfifo_stat_err, f_path);
-
-			print_errno(err);
-		}
-	}
-
-	// Open
-	int fd = open(f_path, mode | O_NONBLOCK);
-
-	if (fd < 0) { // Error
-		char err[1000];
-		snprintf(err, sizeof(err), "%s%s", mkfifo_open_err, f_path);
-
-		print_errno(err);
-	}
-
-	return fd;
-}
+#include "./fifo.h"
 
 VirtualGPIO *vgpio_init(const char *control_f_dir, int max_port_num) {
 	// Allocate
@@ -85,7 +38,7 @@ VirtualGPIO *vgpio_init(const char *control_f_dir, int max_port_num) {
 	char export_path[export_path_len];
 	sprintf(export_path, "%s/export", vgpio->control_f_dir);
 
-	vgpio->export_r_fd = open_or_mk_fifo(export_path, O_RDONLY);
+	vgpio->export_r_fd = open_or_mk_fifo(export_path);
 
 	// Create unexport control file
 	int unexport_path_len = strlen(vgpio->control_f_dir);
@@ -94,7 +47,7 @@ VirtualGPIO *vgpio_init(const char *control_f_dir, int max_port_num) {
 	char unexport_path[unexport_path_len];
 	sprintf(unexport_path, "%s/unexport", vgpio->control_f_dir);
 
-	vgpio->unexport_r_fd = open_or_mk_fifo(unexport_path, O_RDONLY);
+	vgpio->unexport_r_fd = open_or_mk_fifo(unexport_path);
 
 	return vgpio;
 }

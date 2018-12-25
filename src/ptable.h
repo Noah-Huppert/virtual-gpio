@@ -32,7 +32,7 @@ typedef struct {
  * @param control_f_dir Directory in which GPIO port control files are located
  * @returns Allocated GPIOPortTable
  */
-GPIOPortTable *ptable_init(int max_port_num, char *control_f_dir);
+GPIOPortTable *ptable_init(int max_port_num, const char *control_f_dir);
 
 /**
  * Frees a port table

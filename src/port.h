@@ -32,9 +32,19 @@ typedef struct {
 	GPIOPortDirection direction;
 
 	/**
+	 * Direction control file descriptor
+	 */
+	int direction_fd;
+
+	/**
 	 * Value
 	 */
 	bool value;
+
+	/**
+	 * Value control file descriptor
+	 */
+	int value_fd;
 } GPIOPort;
 
 /**
