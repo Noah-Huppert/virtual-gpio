@@ -69,11 +69,16 @@ char **ls(char *dir_path) {
 			exit(1);
 		}
 
-		// Record file name
-		loaded_names++;
-		file_names[loaded_names-1] = (char*)malloc(sizeof(char)*1000);
-		strncpy(file_names[loaded_names-1], dir_entry->d_name,
-				sizeof(char)*1000);
+		// Check file name is not current directory or parent directory
+		if (strcmp(dir_entry->d_name, ".") != 0 && 
+			strcmp(dir_entry->d_name, "..") != 0) {
+
+			// Record file name
+			loaded_names++;
+			file_names[loaded_names-1] = (char*)malloc(sizeof(char)*1000);
+			strncpy(file_names[loaded_names-1], dir_entry->d_name,
+					sizeof(char)*1000);
+		}
 
 		// Call again
 		dir_entry = readdir(dir);
