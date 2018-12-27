@@ -40,4 +40,24 @@ GPIOPortTable *ptable_init(int max_port_num, const char *control_f_dir);
  */
 void ptable_free(GPIOPortTable *ptable);
 
+/**
+ * Exports a port.  
+ *
+ * Exits the program if an error occurs.
+ *
+ * @param ptable GPIO port table
+ * @param number Port number
+ */
+void ptable_export(GPIOPortTable *ptable, int number);
+
+/**
+ * Unexports a port.
+ *
+ * Exits the program if an error occurs.
+ *
+ * @param ptable GPIO port table
+ * @param number Port number
+ */
+void ptable_unexport(GPIOPortTable *ptable, int number);
+
 #endif
