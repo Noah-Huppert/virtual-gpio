@@ -40,8 +40,8 @@ void rm_rf(char *dir_path) {
 }
 
 char **ls(char *dir_path) {
-	char **file_names = (char**)malloc(sizeof(char*)*5);
-	for (int i = 0; i < 5; i++) {
+	char **file_names = (char**)malloc(sizeof(char*)*MAX_LS_ENTRIES);
+	for (int i = 0; i < MAX_LS_ENTRIES; i++) {
 		file_names[i] = NULL;
 	}
 
@@ -63,9 +63,9 @@ char **ls(char *dir_path) {
 
 	while (dir_entry != NULL) {
 		// Check if reached max number of file names
-		if (loaded_names == 5) {
-			fprintf(stderr, "failed to list file names, more than 5 entries "
-					"encountered, path: %s\n", dir_path);
+		if (loaded_names == MAX_LS_ENTRIES) {
+			fprintf(stderr, "failed to list file names, more than %d entries "
+					"encountered, path: %s\n", MAX_LS_ENTRIES, dir_path);
 			exit(1);
 		}
 
@@ -75,9 +75,9 @@ char **ls(char *dir_path) {
 
 			// Record file name
 			loaded_names++;
-			file_names[loaded_names-1] = (char*)malloc(sizeof(char)*1000);
+			file_names[loaded_names-1] = (char*)malloc(sizeof(char)*MAX_LS_ENTRY_LENGTH);
 			strncpy(file_names[loaded_names-1], dir_entry->d_name,
-					sizeof(char)*1000);
+					sizeof(char)*MAX_LS_ENTRY_LENGTH);
 		}
 
 		// Call again
@@ -104,7 +104,7 @@ char **ls(char *dir_path) {
 }
 
 void ls_free(char **file_names) {
-	for (int i = 0; i < 5; i++) {
+	for (int i = 0; i < MAX_LS_ENTRIES; i++) {
 		// If not filled
 		if (file_names[i] == NULL) {
 			// Done freeing
