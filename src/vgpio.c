@@ -70,4 +70,6 @@ void vgpio_free(VirtualGPIO *vgpio) {
 }
 
 void vgpio_run(VirtualGPIO *vgpio) {
+	ptable_export(vgpio->ptable, 1);
+	ptable_unexport(vgpio->ptable, 1);
 }
