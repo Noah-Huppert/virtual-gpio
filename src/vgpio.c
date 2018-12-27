@@ -8,7 +8,6 @@
 #include "./vgpio.h"
 #include "./err.h"
 #include "./fifo.h"
-#include "./dir.h"
 
 VirtualGPIO *vgpio_init(const char *control_f_dir, int max_port_num) {
 	// Allocate
@@ -71,14 +70,4 @@ void vgpio_free(VirtualGPIO *vgpio) {
 }
 
 void vgpio_run(VirtualGPIO *vgpio) {
-	char **file_names = ls("./vgpio");
-
-	for (int i = 0; i < 5; i++) {
-		printf("LS: %s\n", file_names[i]);
-	}
-
-	ls_free(file_names);
-
-	ptable_export(vgpio->ptable, 1);
-	ptable_unexport(vgpio->ptable, 1);
 }
