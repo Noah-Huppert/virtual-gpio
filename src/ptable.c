@@ -43,7 +43,7 @@ void ptable_free(GPIOPortTable *ptable) {
 
 void ptable_export(GPIOPortTable *ptable, int number) {
 	// Check if already exported
-	if (ptable->ports[number-1] != NULL) {
+	if (ptable->ports[number] != NULL) {
 		fprintf(stderr, "port already exported: %d\n", number);
 		exit(1);
 	}
@@ -57,7 +57,7 @@ void ptable_export(GPIOPortTable *ptable, int number) {
 
 void ptable_unexport(GPIOPortTable *ptable, int number) {
 	// Check if already unexported
-	if (ptable->ports[number-1] == NULL) {
+	if (ptable->ports[number] == NULL) {
 		fprintf(stderr, "port already unexported: %d\n", number);
 		exit(1);
 	}
@@ -107,11 +107,13 @@ void ptable_restore(GPIOPortTable *ptable) {
 		}
 
 		// Parse port number into int
-		int port_number = atoi(entry_name[5]);
+		const char *entry_name_num_part = entry_name + 4;
+		int port_number = atoi(entry_name_num_part);
 
 		// Initialize in ports array
 		ptable->ports[port_number] = gpio_port_init(port_number,
 				                                    ptable->control_f_dir);
+		gpio_port_open_control_files(ptable->ports[port_number]);
 	}
 
 	// Free control directory entry names

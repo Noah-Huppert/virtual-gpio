@@ -63,6 +63,15 @@ GPIOPort *gpio_port_init(int number, char *all_control_f_dir);
 void gpio_port_free(GPIOPort *port);
 
 /**
+ * Opens a port's control file descriptors
+ *
+ * Exits program if an error occurs.
+ *
+ * @param port GPIO port
+ */
+void gpio_port_open_control_files(GPIOPort *port);
+
+/**
  * Export a port.
  * Creates a GPIO port control directory and control files.
  *

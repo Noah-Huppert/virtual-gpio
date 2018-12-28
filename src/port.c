@@ -48,6 +48,22 @@ void gpio_port_free(GPIOPort *port) {
 	free(port);
 }
 
+void gpio_port_open_control_files(GPIOPort *port) {
+	// Create direction control file
+	char direction_f_path[1000];
+	snprintf(direction_f_path, sizeof(direction_f_path), "%s/direction",
+			 port->control_f_dir);
+
+	port->direction_fd = open_or_mk_fifo(direction_f_path);
+
+	// Create value control file
+	char value_f_path[1000];
+	snprintf(value_f_path, sizeof(value_f_path), "%s/value",
+			 port->control_f_dir);
+
+	port->value_fd = open_or_mk_fifo(value_f_path);
+}
+
 void gpio_port_export(GPIOPort *port) {
 	// Create control file directory
 	struct stat stat_buff;
@@ -72,19 +88,8 @@ void gpio_port_export(GPIOPort *port) {
 		}
 	}
 
-	// Create direction control file
-	char direction_f_path[1000];
-	snprintf(direction_f_path, sizeof(direction_f_path), "%s/direction",
-			 port->control_f_dir);
-
-	port->direction_fd = open_or_mk_fifo(direction_f_path);
-
-	// Create value control file
-	char value_f_path[1000];
-	snprintf(value_f_path, sizeof(value_f_path), "%s/value",
-			 port->control_f_dir);
-
-	port->value_fd = open_or_mk_fifo(value_f_path);
+	// Open control files
+	gpio_port_open_control_files(port);
 }
 
 void gpio_port_unexport(GPIOPort *port) {
