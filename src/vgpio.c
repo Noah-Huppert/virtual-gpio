@@ -10,6 +10,8 @@
 #include "./fifo.h"
 
 VirtualGPIO *vgpio_init(const char *control_f_dir, int max_port_num) {
+	// TODO: Check process has enough file descriptors available for the number
+	// of specified ports
 	// Allocate
 	VirtualGPIO *vgpio = (VirtualGPIO*)malloc(sizeof(VirtualGPIO));
 
