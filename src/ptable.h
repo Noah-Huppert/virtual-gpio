@@ -60,4 +60,10 @@ void ptable_export(GPIOPortTable *ptable, int number);
  */
 void ptable_unexport(GPIOPortTable *ptable, int number);
 
+/**
+ * Set the state of the GPIO port table based on the actual directories 
+ * present in the control_f_dir.
+ */
+void ptable_restore(GPIOPortTable *ptable);
+
 #endif
