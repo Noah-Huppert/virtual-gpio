@@ -39,15 +39,15 @@ void rm_rf(char *dir_path) {
 	}
 }
 
-char **ls(char *dir_path) {
-	char **file_names = (char**)malloc(sizeof(char*)*MAX_LS_ENTRIES);
-	for (int i = 0; i < MAX_LS_ENTRIES; i++) {
-		file_names[i] = NULL;
+void ls(char *dir_path, char ***entry_names, int *entries_capacity) {
+	// Allocate entry_names
+	*entries_capacity = LS_ENTRIES_REALLOC_SIZE;
+	int loaded_entries = 0;
+
+	*entry_names = (char**)malloc(sizeof(char*)*(*entries_capacity));
+	for (int i = 0; i < (*entries_capacity); i++) {
+		(*entry_names)[i] = NULL;
 	}
-
-	int loaded_names = 0;
-
-	int start_errno = errno;
 	
 	// Open directory
 	DIR *dir = opendir(dir_path);
@@ -58,25 +58,39 @@ char **ls(char *dir_path) {
 		print_errno(err);
 	}
 
+	// Record starting errno to determine if any readdir calls fail
+	int start_errno = errno;
+
 	// Get dir entries
 	struct dirent *dir_entry = readdir(dir);
 
 	while (dir_entry != NULL) {
-		// Check if reached max number of file names
-		if (loaded_names == MAX_LS_ENTRIES) {
-			fprintf(stderr, "failed to list file names, more than %d entries "
-					"encountered, path: %s\n", MAX_LS_ENTRIES, dir_path);
-			exit(1);
-		}
-
-		// Check file name is not current directory or parent directory
+		// Check entry name is not current directory or parent directory
 		if (strcmp(dir_entry->d_name, ".") != 0 && 
 			strcmp(dir_entry->d_name, "..") != 0) {
 
-			// Record file name
-			loaded_names++;
-			file_names[loaded_names-1] = (char*)malloc(sizeof(char)*MAX_LS_ENTRY_LENGTH);
-			strncpy(file_names[loaded_names-1], dir_entry->d_name,
+			// Check if reached max number of entry names
+			if (loaded_entries == (*entries_capacity)) {
+				// Reallocate
+				*entries_capacity += LS_ENTRIES_REALLOC_SIZE;
+
+				int new_size = sizeof(char*)*(*entries_capacity);
+				(*entry_names) = (char**)realloc((*entry_names), new_size);
+
+				// Set new entries to NULL
+				for (int i = (*entries_capacity) - LS_ENTRIES_REALLOC_SIZE;
+					 i < (*entries_capacity); i++) {
+					(*entry_names)[i] = NULL;
+				}
+			}
+
+			// Record entry name
+			loaded_entries++;
+			int entry_i = loaded_entries-1;
+			(*entry_names)[entry_i] = (char*)malloc(sizeof(char)
+					                             *MAX_LS_ENTRY_LENGTH);
+
+			strncpy((*entry_names)[entry_i], dir_entry->d_name,
 					sizeof(char)*MAX_LS_ENTRY_LENGTH);
 		}
 
@@ -98,23 +112,20 @@ char **ls(char *dir_path) {
 				 dir_path);
 		print_errno(err);
 	}
-
-	// Success
-	return file_names;
 }
 
-void ls_free(char **file_names) {
-	for (int i = 0; i < MAX_LS_ENTRIES; i++) {
+void ls_free(char **entry_names, int entries_capacity) {
+	for (int i = 0; i < entries_capacity; i++) {
 		// If not filled
-		if (file_names[i] == NULL) {
+		if (entry_names[i] == NULL) {
 			// Done freeing
 			return;
 		}
 
 		// Free
-		free(file_names[i]);
+		free(entry_names[i]);
 	}
 
 	// Free array
-	free(file_names);
+	free(entry_names);
 }
