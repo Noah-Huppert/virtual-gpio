@@ -1,4 +1,4 @@
-.PHONY: run build clean
+.PHONY: run build clean debug
 
 OUT_DIR=build
 OUT=${OUT_DIR}/virtual-gpio
@@ -21,3 +21,11 @@ ${OUT}: $(shell find src -type f)
 # clean build ouput
 clean:
 	rm -rf ${OUT_DIR}
+
+# debug runs the program in GDB
+debug: ${OUT}
+	gdb \
+		-tui \
+		-x .debug.gdb \
+		-iex "set args ${TEST_CONTROL_FILE_DIR}" \
+		${OUT} 
