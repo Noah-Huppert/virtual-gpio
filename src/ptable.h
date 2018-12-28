@@ -63,6 +63,17 @@ void ptable_unexport(GPIOPortTable *ptable, int number);
 /**
  * Set the state of the GPIO port table based on the actual directories 
  * present in the control_f_dir.
+ *
+ * Assumes the control_f_dir exists.
+ *
+ * Assumes that the files and directories in the control_f_dir have only been
+ * modified by the program.
+ *
+ * If any of these assumptions does not hold the program may exit expectantly.
+ *
+ * Program will exit if any errors occur.
+ *
+ * @param ptable GPIO port table
  */
 void ptable_restore(GPIOPortTable *ptable);
 
