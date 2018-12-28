@@ -49,6 +49,7 @@ void gpio_port_free(GPIOPort *port) {
 }
 
 void gpio_port_open_control_files(GPIOPort *port) {
+	// TODO: Use inotify_add_watch instead of fifo
 	// Create direction control file
 	char direction_f_path[1000];
 	snprintf(direction_f_path, sizeof(direction_f_path), "%s/direction",
