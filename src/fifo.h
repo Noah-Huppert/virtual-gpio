@@ -13,4 +13,13 @@
  */
 int open_or_mk_fifo(char *f_path);
 
+/**
+ * Creates a fifo file if it doesn't exist
+ *
+ * Exits the program on error.
+ *
+ * @param f_path File path
+ */
+void mkfifo_if_no_exist(char *f_path);
+
 #endif

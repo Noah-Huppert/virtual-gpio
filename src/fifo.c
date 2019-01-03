@@ -40,3 +40,27 @@ int open_or_mk_fifo(char *f_path) {
 
 	return fd;
 }
+
+void mkfifo_if_no_exist(char *f_path) {
+	struct stat stat_buff;
+
+	// Check if file exists
+	if (stat(f_path, &stat_buff) < 0) { // If error while checking
+		if (ENOENT == errno) { // Doesn't exist
+			// Create
+			if (mkfifo(f_path, 0666) < 0) {
+				char err[1000];
+				snprintf(err, sizeof(err), "error creating FIFO file: %s",
+						 f_path);
+
+				print_errno(err);
+			}
+		} else { // Other error
+			char err[1000];
+			snprintf(err, sizeof(err), "error checking if file exists: %s",
+					 f_path);
+
+			print_errno(err);
+		}
+	}
+}

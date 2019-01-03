@@ -13,14 +13,14 @@ typedef struct {
 	const char *control_f_dir;
 
 	/**
-	 * File descriptor for reading the export control file.
+	 * Path to the export control file.
 	 */
-	int export_r_fd;
+	char export_f_path[1000];
 
 	/**
-	 * File descriptor for reading the unexport control file.
+	 * Path to the unexport control file.
 	 */
-	int unexport_r_fd;
+	char unexport_f_path[1000];
 
 	/**
 	 * Holds exported GPIO ports.
